@@ -96,3 +96,14 @@ Examples:
 name LIKE 'Ra%' -- starts with Ra
 name LIKE '%esh' -- ends with esh
 name LIKE '%am%' -- contains am
+
+# SQL ORDER
+
+SELECT
+FROM
+JOIN
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+LIMIT
