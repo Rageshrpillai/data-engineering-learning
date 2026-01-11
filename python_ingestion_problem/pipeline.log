@@ -1,0 +1,26 @@
+2026-01-11 13:13:18,405 | INFO | Pipeline started
+2026-01-11 13:13:18,405 | INFO | Reading CSV file
+2026-01-11 13:13:18,437 | INFO | Rows read from CSV: 3
+2026-01-11 13:13:18,437 | INFO | Connecting to PostgreSQL
+2026-01-11 13:13:18,804 | INFO | Database connection successful
+2026-01-11 13:13:18,828 | INFO | crm_customers table ensured
+2026-01-11 13:13:18,930 | INFO | Total rows processed : 3
+2026-01-11 13:13:18,930 | INFO | Rows inserted        : 0
+2026-01-11 13:13:18,933 | INFO | Rows updated         : 0
+2026-01-11 13:13:18,935 | INFO | Rows ignored         : 3
+2026-01-11 13:13:18,935 | INFO | Transaction committed successfully
+2026-01-11 13:13:18,937 | INFO | Database connection closed
+2026-01-11 13:13:18,937 | INFO | Pipeline finished
+2026-01-11 13:14:29,087 | INFO | Pipeline started
+2026-01-11 13:14:29,088 | INFO | Reading CSV file
+2026-01-11 13:14:29,103 | INFO | Rows read from CSV: 3
+2026-01-11 13:14:29,104 | INFO | Connecting to PostgreSQL
+2026-01-11 13:14:29,187 | INFO | Database connection successful
+2026-01-11 13:14:29,195 | INFO | crm_customers table ensured
+2026-01-11 13:14:29,235 | INFO | Total rows processed : 3
+2026-01-11 13:14:29,236 | INFO | Rows inserted        : 0
+2026-01-11 13:14:29,236 | INFO | Rows updated         : 1
+2026-01-11 13:14:29,236 | INFO | Rows ignored         : 2
+2026-01-11 13:14:29,236 | INFO | Transaction committed successfully
+2026-01-11 13:14:29,237 | INFO | Database connection closed
+2026-01-11 13:14:29,237 | INFO | Pipeline finished

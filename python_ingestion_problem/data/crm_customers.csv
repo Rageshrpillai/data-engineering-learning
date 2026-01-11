@@ -1,0 +1,4 @@
+customer_id,customer_name,email,country,last_updated
+1,John Doe,john@gmail.com,USA,2024-01-01
+2,Alice Smith,alice@gmail.com,UK,2024-01-02
+3,Ravi Kumar,ravi@gmail.com,INDIA,2024-01-05
