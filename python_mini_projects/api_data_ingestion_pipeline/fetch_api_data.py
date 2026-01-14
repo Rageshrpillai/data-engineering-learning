@@ -1,5 +1,7 @@
 import requests
 import logging
+import pandas as pd
+
 
 # ---------------- LOGGING SETUP ----------------
 logging.basicConfig(
@@ -63,8 +65,46 @@ if __name__ == "__main__":
     logging.info("API fetch completed")
 
     flattened_users = flatten_users(users)
+  
 
     logging.info(f"Flattened records count: {len(flattened_users)}")
 
     if flattened_users:
         logging.info(f"Sample flattened record: {flattened_users[0]}")
+    
+    #converting flattened record to pandas data frame
+    
+    df = pd.DataFrame(flattened_users)
+
+    logging.info("Converted flattened records to Pandas DataFrame")
+    logging.info(f"DataFrame shape: {df.shape}")
+    logging.info(f"Columns: {list(df.columns)}")
+
+    logging.info("DataFrame dtypes:")
+    logging.info(df.dtypes)
+
+    #Define schema expectations (curilated step)
+
+    MANDATORY_COLUMNS = ["user_id", "email"]
+    OPTIONAL_COLUMNS = [
+    "username",
+    "phone",
+    "first_name",
+    "last_name",
+    "city",
+    "zipcode"
+]
+    #validation 
+
+    missing_user_id = df["user_id"].isna().sum()
+    missing_email = df["email"].isna().sum()
+
+    logging.info(f"Missing user_id count: {missing_user_id}")
+    logging.info(f"Missing email count: {missing_email}")
+    
+    if missing_user_id > 0:
+        logging.warning("Some records are missing user_id (critical field)")
+
+    if missing_email > 0:
+        logging.warning("Some records are missing email (critical field)")
+
