@@ -1,9 +1,10 @@
 import requests
+import json
 import logging
-import pandas as pd
+from datetime import datetime
+from pathlib import Path
 
-
-# ---------------- LOGGING SETUP ----------------
+# ---------------- LOGGING ----------------
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s"
@@ -11,100 +12,32 @@ logging.basicConfig(
 
 API_URL = "https://fakestoreapi.com/users"
 
+# ---------------- PROJECT ROOT ----------------
+BASE_DIR = Path(__file__).resolve().parent
+
+RAW_BASE_PATH = BASE_DIR / "raw" / "users"
 
 def fetch_users():
-    logging.info("Starting API call to fetch users")
+    logging.info("Calling users API")
+    response = requests.get(API_URL, timeout=10)
+    response.raise_for_status()
+    return response.json()
 
-    try:
-        response = requests.get(API_URL, timeout=10)
-        logging.info(f"API response status code: {response.status_code}")
+def write_raw(users):
+    ingestion_date = datetime.utcnow().date().isoformat()
 
-        response.raise_for_status()
+    raw_path = RAW_BASE_PATH / f"ingestion_date={ingestion_date}"
+    raw_path.mkdir(parents=True, exist_ok=True)
 
-        data = response.json()
-        logging.info(f"Number of records received: {len(data)}")
+    file_path = raw_path / "users_raw.json"
 
-        return data
+    with open(file_path, "w") as f:
+        json.dump(users, f, indent=2)
 
-    except requests.exceptions.Timeout:
-        logging.error("API request timed out")
-        return []
-
-    except requests.exceptions.RequestException as e:
-        logging.error(f"API request failed: {e}")
-        return []
-
-
-def flatten_users(users):
-    """
-    Flattens user records based on expected API schema.
-    Strict approach: does not guess or adapt broken schemas.
-    """
-
-    flattened = []
-
-    for user in users:
-        record = {
-            "user_id": user.get("id"),
-            "email": user.get("email"),
-            "username": user.get("username"),
-            "phone": user.get("phone"),
-            "first_name": user.get("name", {}).get("firstname"),
-            "last_name": user.get("name", {}).get("lastname"),
-            "city": user.get("address", {}).get("city"),
-            "zipcode": user.get("address", {}).get("zipcode"),
-        }
-
-        flattened.append(record)
-
-    return flattened
-
+    logging.info(f"Raw data written to {file_path}")
 
 if __name__ == "__main__":
+    logging.info("RAW ingestion started")
     users = fetch_users()
-    logging.info("API fetch completed")
-
-    flattened_users = flatten_users(users)
-  
-
-    logging.info(f"Flattened records count: {len(flattened_users)}")
-
-    if flattened_users:
-        logging.info(f"Sample flattened record: {flattened_users[0]}")
-    
-    #converting flattened record to pandas data frame
-    
-    df = pd.DataFrame(flattened_users)
-
-    logging.info("Converted flattened records to Pandas DataFrame")
-    logging.info(f"DataFrame shape: {df.shape}")
-    logging.info(f"Columns: {list(df.columns)}")
-
-    logging.info("DataFrame dtypes:")
-    logging.info(df.dtypes)
-
-    #Define schema expectations (curilated step)
-
-    MANDATORY_COLUMNS = ["user_id", "email"]
-    OPTIONAL_COLUMNS = [
-    "username",
-    "phone",
-    "first_name",
-    "last_name",
-    "city",
-    "zipcode"
-]
-    #validation 
-
-    missing_user_id = df["user_id"].isna().sum()
-    missing_email = df["email"].isna().sum()
-
-    logging.info(f"Missing user_id count: {missing_user_id}")
-    logging.info(f"Missing email count: {missing_email}")
-    
-    if missing_user_id > 0:
-        logging.warning("Some records are missing user_id (critical field)")
-
-    if missing_email > 0:
-        logging.warning("Some records are missing email (critical field)")
-
+    write_raw(users)
+    logging.info("RAW ingestion completed")
