@@ -3,18 +3,17 @@
 import re
 
 def LongestWord(s):
+  maxword=""
     # code here
-    words=re.findall(r"[a-zA-Z]+",s)
+  words = re.findall(r"[a-zA-Z]+",s)
 
-    print(words)
+   
+  #largest number
+  for word in words:
+    if len(word)>len(maxword):
+      maxword=word
 
-    # maxword=max(word , key=len)
-    # print(maxword)
-    maxword=''
-    for word in words:
-        if len(word) > len(maxword):
-            maxword = word
-    return maxword;
+  return maxword
 
-s="fun&!! time"
+s="funssss&!! time"
 print (LongestWord(s))

@@ -2,7 +2,7 @@
 # Output: 2
 
 def wordcount(s):
-    words= s.split()
+    words=s.split()
     return len(words)
 
 
